@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# gitignore.py
+# A simple script to generate a .gitignore file with default entries, additional entries, or
+# templates from gitignore.io. It uses rich for console output and supports reading existing .gitignore files.
+# Requires Python 3.6+ and the rich library.
+# Copyright (c) 2023, Hadi Cahyadi <cumulus13@gmail.com>
+# Homepage: https://github.com/cumulus13/gitignore
+# Licensed under the MIT License.
+# SPDX-License-Identifier: MIT
 
 import sys
 import argparse
