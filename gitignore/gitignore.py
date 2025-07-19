@@ -17,6 +17,7 @@ from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.panel import Panel
 from rich.syntax import Syntax
+
 try:
     from licface import CustomRichHelpFormatter
 except ImportError:
@@ -135,6 +136,32 @@ class GitignoreGenerator:
         except Exception as e:
             console.print(f"{cls.ICONS['error']} [bold red]Failed to read .gitignore:[/bold red] {e}")
             
+def get_version():
+    """
+    Get the version.
+    Version is taken from the __version__.py file if it exists.
+    The content of __version__.py should be:
+    version = "0.33"
+    """
+    try:
+        version_file = Path(__file__).parent / "__version__.py"
+        if version_file.is_file():
+            with open(version_file, "r") as f:
+                for line in f:
+                    if line.strip().startswith("version"):
+                        parts = line.split("=")
+                        if len(parts) == 2:
+                            return parts[1].strip().strip('"').strip("'")
+        else:
+            return "0.0.0"  # Fallback if version file is not found
+    except Exception as e:
+        if os.getenv('TRACEBACK') and os.getenv('TRACEBACK') in ['1', 'true', 'True']:
+            console.print_exception(show_locals=False, theme='fruity', width=os.get_terminal_size().columns, extra_lines=1, word_wrap=True)
+        else:
+            console.print(f"ERROR: {e}")
+
+    return "0.0.0"
+            
 def main():
     parser = argparse.ArgumentParser(
         description="Generate .gitignore With default data, additional, or template.",
@@ -161,9 +188,14 @@ def main():
         "-f", "--force", action="store_true", help="Pass the prompt if .gitignore already exists"
     )
     parser.add_argument('-r', '--read', action='store_true', help='Read .gitignore file and print its content')
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {get_version()}',
+                        help='Show the version of this script')
 
     if len(sys.argv) == 1:
         parser.print_help()
+        
+        console.print(f"\n{GitignoreGenerator.ICONS['start']} [bold blue]Starting to make .gitignore ...[/bold blue]")
+        GitignoreGenerator.generate(path=Path("."))
         sys.exit(1)
         
     args = parser.parse_args()
@@ -202,7 +234,7 @@ def main():
     if args.read:
         GitignoreGenerator.read_gitignore(path=args.path)
         return
-            
+
     console.print(f"{GitignoreGenerator.ICONS['start']} [bold blue]Starting to make .gitignore ...[/bold blue]")
     GitignoreGenerator.generate(
         path=args.path,
