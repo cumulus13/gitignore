@@ -344,4 +344,4 @@ MIT License. See [LICENSE](LICENSE).
 
 [Support me on Patreon](https://www.patreon.com/cumulus13)
 
-[Medium](https://www.medium.com/@cumulus13)
+[Medium](https://medium.com/@cumulus13/gitign-the-smart-gitignore-generator-that-every-developer-needs-d9bd9b23a719)
