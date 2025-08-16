@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from setuptools import setup, find_packages
 from pathlib import Path
 import os
@@ -42,9 +44,9 @@ def get_long_description():
     return ""
 
 setup(
-    name="gitignore",
+    name="gitign",
     version=get_version(),
-    description="A simple script to generate .gitignore files with rich output and gitignore.io templates.",
+    description="A powerful and user-friendly Python script to generate `.gitignore` files with default entries, custom patterns, or templates from gitignore.io",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     keywords="gitignore gitignore.io rich terminal",
@@ -65,9 +67,9 @@ setup(
     python_requires=">=3.6",
     entry_points={
         "console_scripts": [
-            "gitign=gitignore.gitignore:main",
-            "gitig=gitignore.gitignore:main",
-            "gitignore=gitignore.gitignore:main",
+            f"gitign={NAME}.{NAME}:main",
+            f"gitig={NAME}.{NAME}:main",
+            f"{NAME}={NAME}.{NAME}:main",
         ]
     },
     license="MIT",
