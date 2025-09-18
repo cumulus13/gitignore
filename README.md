@@ -1,6 +1,6 @@
-# 🚀 GitIgnore Generator
+# 🚀 GitIgnore Generator (`gitign`)
 
-A powerful and user-friendly Python script to generate `.gitignore` files with default entries, custom patterns, or templates from [gitignore.io](https://gitignore.io). Features rich console output and smart duplicate detection.
+A powerful and user-friendly Python script to generate `.gitignore` files with default entries, custom patterns, or templates from [gitignore.io](https://gitignore.io) and to effortlessly create, manage, and clean your `.gitignore` files. Features rich console output and smart duplicate detection.
 
 ## ✨ Features
 
@@ -16,7 +16,8 @@ A powerful and user-friendly Python script to generate `.gitignore` files with d
 ## 📋 Requirements
 
 - Python 3.6+
-- Rich library (`pip install rich`)
+- [Rich](https://pypi.org/project/rich) library (`pip install rich`)
+- [licface](https://pypi.org/project/licface) (`pip install licface`)  (*optional*, for enhanced help formatting)
 
 ## 🔧 Installation
 
@@ -60,58 +61,63 @@ python gitignore.py -r
 
 ```bash
 # Basic generation with defaults
-python gitignore.py
+gitign
 
 # Generate with custom entries
-python gitignore.py "*.tmp" "debug.log" "*.cache"
+gitign "*.tmp" "debug.log" "*.cache"
 
 # Generate with templates
-python gitignore.py -t python django
+gitign -t python django
 
 # Generate without default entries
-python gitignore.py --no-defaults -t python
+gitign --no-defaults -t python
 
 # Force overwrite existing file
-python gitignore.py -f "*.backup"
+gitign -f "*.backup"
 ```
 
 ### 📝 Adding to Existing Files
 
 ```bash
 # Auto-append mode (detects existing file)
-python gitignore.py "new_pattern" "*.local"
+gitign "new_pattern" "*.local"
+
+gitign -d "secrets.txt" -d "temp/" -d "*.log"
 
 # Explicit append mode
-python gitignore.py -a "build/" "dist/"
+gitign -a "build/" "dist/"
 
 # Add multiple entries with different separators
-python gitignore.py "file1,file2;file3|file4"
+gitign "file1,file2;file3|file4"
+
+# Combine Template and Custom Entries
+gitign -t node -d ".env" -d "dist_electron/"
 ```
 
 ### 🧹 Cleaning Duplicates
 
 ```bash
 # Preview duplicates without changes
-python gitignore.py --clean --preview
+gitign --clean --preview
 
 # Remove duplicates (creates backup by default)
-python gitignore.py --clean
+gitign --clean
 
 # Remove duplicates without backup
-python gitignore.py --clean --no-backup
+gitign --clean --no-backup
 
 # Clean file in specific directory
-python gitignore.py --clean -p /path/to/project
+gitign --clean -p /path/to/project
 ```
 
 ### 📖 Reading Files
 
 ```bash
 # Read .gitignore with syntax highlighting
-python gitignore.py -r
+gitign -r
 
 # Read from specific directory
-python gitignore.py -r -p /path/to/project
+gitign -r -p /path/to/project
 ```
 
 ## ⚙️ Command Line Options
@@ -136,6 +142,40 @@ python gitignore.py -r -p /path/to/project
 | `--clean` | Clean duplicate entries |
 | `--preview` | Preview changes without applying |
 | `--no-backup` | Don't create backup file |
+
+### 🎯 All Options
+
+| Option | Description |
+| :--- | :--- |
+| `-p PATH`, `--path PATH` | Target directory for the `.gitignore` file. (Default: current directory `.`) |
+| `-d DATA`, `--data DATA` | Add a custom entry. Can be used multiple times. |
+| `-t TEMPLATE [TEMPLATE ...]`, `--template TEMPLATE [TEMPLATE ...]` | Use one or more templates from [gitignore.io](https://www.toptal.com/developers/gitignore) (e.g., `python`, `node`, `java`). |
+| `-a`, `--append` | Add entries to an existing `.gitignore` file instead of overwriting it. |
+| `-f`, `--force` | Skip the overwrite confirmation prompt if `.gitignore` already exists. |
+| `--no-defaults` | Prevent the script from adding its built-in default entries. |
+| `-r`, `--read` | Display the content of the `.gitignore` file in the specified path with syntax highlighting. |
+| `--clean` | Remove duplicate entries from the `.gitignore` file. |
+| `--preview` | (With `--clean`) Show which duplicates would be removed without changing the file. |
+| `--no-backup` | (With `--clean`) Do not create a `.gitignore.bak` backup file. |
+| `-h`, `--help` | Show a help message and exit. |
+| `-v`, `--version` | Show the script version and exit. |
+
+
+### 🧾 Positional Arguments (`ENTRIES`)
+
+You can pass entries directly as arguments. The script intelligently splits them based on common delimiters:
+
+*   Comma (`,`): `gitign "*.tmp,*.log"`
+*   Semicolon (`;`): `gitign "build/;dist/"`
+*   Colon (`:`): `gitign "secrets.txt:config.ini"`
+*   Pipe (`|`): `gitign "temp|cache"`
+*   Space (` `): `gitign .vscode .idea`
+*   Newline (`\n`): Useful when piping input.
+*   Brackets: `gitign "[*.bak,*.old]"` or `gitign "{*.tmp,*.temp}"`
+*   Quotes: `gitign "'my file.txt'"` or `gitign '"another file.log"'`
+
+> **Note:** Backslashes (`\`) in entries are automatically converted to forward slashes (`/`) for cross-platform compatibility.
+
 
 ## 🎨 Default Entries
 
@@ -334,7 +374,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## License
 
-MIT License. See [LICENSE](LICENSE).
+MIT License. See [LICENSE](`LICENSE`).
 
 ## Coffee
 
